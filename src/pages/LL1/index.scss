@@ -1,0 +1,14 @@
+@import '~antd/dist/antd.css';
+
+.page {
+  text-align: left;
+  padding: 0 5px;
+
+  .row-error {
+    color: #d23a3a;
+  }
+
+  .col {
+    padding: 0 5px;
+  }
+}

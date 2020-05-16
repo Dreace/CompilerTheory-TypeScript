@@ -1,0 +1,23 @@
+.header {
+  box-shadow: 0 2px 8px #f0f1f2;
+  margin-bottom: 10px;
+  height: 60px;
+
+  .ant-menu-horizontal {
+    border-bottom: unset;
+    line-height: 58px;
+    width: fit-content;
+    margin: 0 auto;
+    .ant-menu-item {
+      border-top: 2px solid transparent;
+      border-bottom: unset;
+    }
+
+    .ant-menu-item-selected,
+    .ant-menu-item-active,
+    .ant-menu-item:hover {
+      border-top: 2px solid #1890ff;
+      border-bottom: unset;
+    }
+  }
+}
