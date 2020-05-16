@@ -46,7 +46,6 @@ export class Production {
     addCandidate(str: string): void {
         if (str.length < 4 || !(str[1] === '-' && str[2] === '>')) {
             throw new Error(`无法解析产生式 ${str}`);
-            // return;
         }
         for (const value of str.substr(3).split('|')) {
             const candidate: Symbol[] = [];
@@ -111,7 +110,7 @@ export class LL1 {
         })
         this.productions.forEach(production => {    // 求解符号串 first 集合
             production.candidates.forEach(candidate => {
-                const str: string = candidate.map(symbol => symbol.symbol).join("");
+                const str: string = candidate.map(symbol => symbol.symbol).join(""); // 转成字符串方便处理
                 this.stringFirst.set(str, new Set<Symbol>());
                 for (let i = 0; i < candidate.length; ++i) {
                     const tempSet: Set<Symbol> = cloneSymbolSet(this.first.get(candidate[i])!);
@@ -135,23 +134,24 @@ export class LL1 {
         if (this.done.has(symbol)) {
             return;
         }
-        if (symbol.type === SYMBOL_TYPE.TERMINAL || symbol.type === SYMBOL_TYPE.EMPTY) {
+        if (symbol.type === SYMBOL_TYPE.TERMINAL || symbol.type === SYMBOL_TYPE.EMPTY) {    // 终结符的 first 集合只有本身
             this.first.get(symbol)!.add(symbol);
             this.done.set(symbol, true);
             return;
         }
         for (const production of this.productions) {
-            if (production.left === symbol) {
+            if (production.left === symbol) {   // 找到已当前符号开始的非终结符
                 for (const candidate of production.candidates) {
                     for (let i = 0; i < candidate.length; ++i) {
                         this.calculateFirst(candidate[i]);
                         const first = this.first.get(symbol)!;
+                        // 不是非终结符或者 first 集合不含有 $
                         if (candidate[i].type !== SYMBOL_TYPE.VARIABLE || !this.first.get(candidate[i])!.has(getSymbol("$"))) {
                             this.first.get(candidate[i])!.forEach(value => first.add(value));
                             break;
                         }
                         const tempSet: Set<Symbol> = cloneSymbolSet(this.first.get(candidate[i])!);
-                        if (i + 1 !== candidate.length) {
+                        if (i + 1 !== candidate.length) {   // 最后一个符号不去除 $
                             tempSet.delete(getSymbol("$"));
                         }
                         tempSet.forEach(value => first.add(value));
@@ -169,7 +169,7 @@ export class LL1 {
         } else {
             this.done.set(symbol, true);
         }
-        if (symbol.symbol === "S") {
+        if (symbol.symbol === "S") {    // 开始符号
             this.follow.get(symbol)!.add(getSymbol("#", SYMBOL_TYPE.TERMINAL));
         }
         for (const production of this.productions) {
@@ -182,11 +182,11 @@ export class LL1 {
                             this.follow.get(production.left)!.forEach(symbol => follow.add(symbol));
                             continue;
                         }
-                        if (candidate[i + 1].type === SYMBOL_TYPE.TERMINAL) {
+                        if (candidate[i + 1].type === SYMBOL_TYPE.TERMINAL) {   // 是终结符
                             this.follow.get(candidate[i])!.add(candidate[i + 1]);
                         } else {
                             const tempSet = cloneSymbolSet(this.first.get(candidate[i + 1])!);
-                            tempSet.delete(getSymbol("$"));
+                            tempSet.delete(getSymbol("$")); // 添加前先去掉 $
                             const follow = this.follow.get(candidate[i])!;
                             tempSet.forEach(symbol => follow.add(symbol));
                             if (this.first.get(candidate[i + 1])!.has(getSymbol("$"))) {    // 下一个符号的 first 有 $
@@ -211,7 +211,7 @@ export class LL1 {
                         this.analyseTable.get(production.left)!.set(symbol, candidate);
                     }
                 });
-                if (this.stringFirst.get(str)!.has(getSymbol("$"))) {
+                if (this.stringFirst.get(str)!.has(getSymbol("$"))) {   // 当前符号串可以推导出 $
                     this.follow.get(production.left)!.forEach(symbol => {
                         if (symbol.type !== SYMBOL_TYPE.EMPTY) {
                             this.analyseTable.get(production.left)!.set(symbol, candidate);

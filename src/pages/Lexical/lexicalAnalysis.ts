@@ -154,7 +154,7 @@ export class Lexical {
                     result.type = Lexical.operators.get(str) as CLangType;
                     column = j - 1;
                 }
-            } else if (c === '"' || c === '\'') {
+            } else if (c === '"' || c === '\'') {   // 字符串与字符
                 for (j = column + 1; j < inputLength; ++j) {
                     if (input[j] === '\\') {    // 转义符起始，跳过下一个字符
                         ++j;

@@ -19,7 +19,7 @@ export default class App extends React.Component {
                             <Link to="/ll1">LL(1) 文法分析</Link>
                         </Menu.Item>
                         <Menu.Item icon={<GithubOutlined/>}>
-                            <a href={"http://github.com"} target="_blank" rel="noopener noreferrer">
+                            <a href={"https://github.com/Dreace/CompilerTheory"} target="_blank" rel="noopener noreferrer">
                                 Github
                             </a>
                         </Menu.Item>

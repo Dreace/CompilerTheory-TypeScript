@@ -20,7 +20,7 @@
   ```
   
 ## Demo
-已在线部署：[compiler-theory.now.sh](compiler-theory.now.sh)
+已在线部署：[https://compiler-theory.now.sh](https://compiler-theory.now.sh/)
 
 ### 词法分析
 
